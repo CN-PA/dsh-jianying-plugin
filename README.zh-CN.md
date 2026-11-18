@@ -6,7 +6,7 @@
 [![Release](https://img.shields.io/github/v/release/CN-PA/dsh-jianying-plugin?display_name=tag)](https://github.com/CN-PA/dsh-jianying-plugin/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-55e69d.svg)](LICENSE)
 
-[English](README.md) · [项目主页](https://cn-pa.github.io/dsh-jianying-plugin/) · [最新版本](https://github.com/CN-PA/dsh-jianying-plugin/releases/latest)
+[中文主页](README.md) · [English](README.en.md) · [项目主页](https://cn-pa.github.io/dsh-jianying-plugin/) · [最新版本](https://github.com/CN-PA/dsh-jianying-plugin/releases/latest)
 
 <img src="https://raw.githubusercontent.com/CN-PA/dsh-jianying-plugin/main/assets/social-preview.svg" alt="dsh-jianying-plugin" width="100%" />
 
@@ -14,7 +14,7 @@
 
 当前版本：`0.3.0`
 
-[English README](README.md)
+[English README](README.en.md)
 
 ## 已实现能力
 

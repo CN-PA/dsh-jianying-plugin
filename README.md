@@ -1,148 +1,214 @@
+<div align="center">
+
+<img src="./assets/icon.svg" width="84" height="84" alt="dsh-jianying-plugin" />
+
 # dsh-jianying-plugin
 
-**Teach DeepSeek Harness to edit Jianying Pro drafts through Jianying's authorized DraftEditing host.**
+### 让 DeepSeek Harness 真正剪得动剪映草稿
+
+字幕 · 音频 · 转场 · 导出 · 回读 · 编辑回执
 
 [![CI](https://github.com/CN-PA/dsh-jianying-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/CN-PA/dsh-jianying-plugin/actions/workflows/ci.yml)
+[![Pages](https://github.com/CN-PA/dsh-jianying-plugin/actions/workflows/pages.yml/badge.svg)](https://cn-pa.github.io/dsh-jianying-plugin/)
 [![Release](https://img.shields.io/github/v/release/CN-PA/dsh-jianying-plugin?display_name=tag)](https://github.com/CN-PA/dsh-jianying-plugin/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-55e69d.svg)](LICENSE)
-[![DSH plugin](https://img.shields.io/badge/DSH-plugin-4de1ff.svg)](https://github.com/CN-PA/dsh-jianying-plugin)
+[![Windows](https://img.shields.io/badge/platform-Windows-4de1ff.svg)](#兼容性)
 
-[中文说明](README.zh-CN.md) · [Landing page](https://cn-pa.github.io/dsh-jianying-plugin/) · [Latest release](https://github.com/CN-PA/dsh-jianying-plugin/releases/latest)
+[项目主页](https://cn-pa.github.io/dsh-jianying-plugin/) ·
+[快速安装](#-快速开始) ·
+[工具矩阵](#-工具矩阵) ·
+[安全机制](#-安全机制) ·
+[English](README.en.md) ·
+[最新版本](https://github.com/CN-PA/dsh-jianying-plugin/releases/latest)
 
-<img src="https://raw.githubusercontent.com/CN-PA/dsh-jianying-plugin/main/assets/social-preview.svg" alt="dsh-jianying-plugin — edit Jianying with DSH" width="100%" />
+<img src="https://raw.githubusercontent.com/CN-PA/dsh-jianying-plugin/main/assets/social-preview.svg" alt="dsh-jianying-plugin" width="100%" />
 
-`dsh-jianying-plugin` connects DSH to Jianying Pro's local authorized Custom Agent host. It can inspect drafts, create a reviewable edit plan, apply subtitle/audio/transition/export operations after explicit confirmation, read the edited draft back, and produce an audit receipt.
+</div>
 
-It does **not** decrypt or directly modify Jianying's encrypted `draft_content.json`.
+> **这是一个能让 DSH 操作真实剪映草稿的开源插件。**
+>
+> 它不直接修改加密的 `draft_content.json`，而是连接剪映正在运行的授权 Custom Agent host，通过官方 DraftEditing 链路完成编辑，并在写入后回读草稿、生成可审计回执。
 
-## Why this plugin
+## ✨ 为什么值得试试
 
-Most "AI video" tools create a new timeline and leave you to finish the edit somewhere else. This plugin operates on the user's actual Jianying draft while keeping the upstream safety boundary:
+<table>
+<tr>
+<td width="50%">
 
-- actual DraftEditing operations, not a simulated preview;
-- explicit two-phase writes;
-- no standalone `lyra-cli` bypass;
-- public CI on Windows and Linux, Node 22 and 24;
-- local live diagnostics for Jianying, host, session, and readback;
-- receipts for auditing what was changed.
+### 🎬 真的编辑草稿
 
-## Quick start
+不是生成一段剪辑建议，也不是做一个看起来像剪映的预览。插件直接操作用户正在使用的剪映草稿。
 
-Requirements:
+</td>
+<td width="50%">
 
-- Windows 10/11 x64
-- DSH Desktop
-- Jianying Pro with its Agent runtime available
-- Node.js 22 or newer
+### 🛡️ 两阶段写入
 
-### One-command installer
+先读取，再规划；只有用户明确确认后才执行。计划成功不等于草稿已修改。
 
-From PowerShell:
+</td>
+</tr>
+<tr>
+<td>
+
+### 🔎 可回读、可追溯
+
+写入前后采集草稿哈希，读取 canonical 状态，并生成 JSON / Markdown 编辑回执。
+
+</td>
+<td>
+
+### 🩺 一键诊断
+
+`jianying_doctor` 会检查安装、CLI、草稿表、剪映进程、授权 host 和 Agent 会话，并告诉你下一步怎么修。
+
+</td>
+</tr>
+</table>
+
+## 🚀 快速开始
+
+### 环境要求
+
+| 项目 | 要求 |
+|---|---|
+| 系统 | Windows 10 / 11 x64 |
+| DSH | DSH Desktop |
+| 剪映 | 剪映专业版，已安装并至少启动或登录过一次 |
+| 剪映能力 | Custom Agent host 可用 |
+| 开发环境 | Node.js 22+ |
+
+### 一键安装
+
+打开 PowerShell：
 
 ```powershell
 irm https://raw.githubusercontent.com/CN-PA/dsh-jianying-plugin/main/scripts/install.ps1 | iex
 ```
 
-The installer resolves the latest GitHub Release, verifies the SHA-256 digest, downloads the plugin asset, and installs it into the `desktop` profile.
+安装脚本会：
 
-For another profile or a non-PATH DSH CLI:
+1. 获取 GitHub 最新 Release；
+2. 校验附件 SHA-256；
+3. 下载插件；
+4. 安装到 DSH `desktop` profile。
+
+<details>
+<summary><b>自定义 profile 或 DSH 安装路径</b></summary>
 
 ```powershell
-.\scripts\install.ps1 -Profile github-test -DshCommand 'F:\dsh\resources\runtime\cli\bin\dsh.cmd'
+.\scripts\install.ps1 `
+  -Profile github-test `
+  -DshCommand 'F:\dsh\resources\runtime\cli\bin\dsh.cmd'
 ```
 
-### Manual installation
+</details>
 
-Download the `.tgz` from [Releases](https://github.com/CN-PA/dsh-jianying-plugin/releases/latest), then:
+<details>
+<summary><b>手动安装</b></summary>
+
+从 [Releases](https://github.com/CN-PA/dsh-jianying-plugin/releases/latest) 下载 `.tgz`：
 
 ```powershell
 dsh plugin --profile desktop add file:F:/Downloads/dsh-jianying-plugin-0.3.0.tgz
 ```
 
-Or install from the repository:
+或者直接从仓库安装：
 
 ```powershell
 dsh plugin --profile desktop add github:CN-PA/dsh-jianying-plugin
 ```
 
-Restart DSH if the plugin card does not appear immediately.
+</details>
 
-## First run
+### 第一次使用
 
-1. Start Jianying Pro.
-2. Open the Jianying Agent panel once so an authorized host session exists.
-3. In DSH, call:
+1. 启动剪映专业版。
+2. 打开一次剪映 Agent 面板，让授权 host 和会话存在。
+3. 在 DSH 中调用：
 
 ```text
 jianying_doctor
 ```
 
-The doctor checks:
-
-- Windows support;
-- Jianying installation;
-- official `jianying-agent-cli.exe`;
-- draft registry;
-- running Jianying process;
-- authorized Custom Agent host;
-- discovered instance and session.
-
-If a check fails, the response includes a concrete `nextAction`.
-
-Then try a read-only workflow:
+4. 所有检查通过后，对 DSH 说：
 
 ```text
-List my Jianying drafts, inspect the newest one, and read it back.
+列出我的剪映草稿，检查最新草稿，并只读回读。
 ```
 
-## Safety model
+## 🧭 工作流
 
-Every write is split into two phases:
+```mermaid
+flowchart LR
+    A[DSH Tool] --> B[授权 Custom Agent host]
+    B --> C[Director / Editing Agent]
+    C --> D[DraftQuery]
+    D --> E[生成可审阅计划]
+    E --> F{用户确认}
+    F -->|plan 阶段| G[不写入]
+    F -->|apply + confirm| H[DraftEditing]
+    H --> I[canonical 回读]
+    I --> J[备份 / 哈希 / 回执]
+```
+
+## 🛡️ 安全机制
+
+> **不碰加密草稿内部格式，不跳过剪映授权边界。**
+
+- `mode=plan` 只创建计划，不写入草稿。
+- `mode=apply` 必须显式传入 `confirm=true`。
+- 运行期额外权限默认不自动批准。
+- apply 前默认备份草稿 JSON。
+- 写入后对比文件哈希并回读 canonical 状态。
+- 导出默认拒绝覆盖已有文件。
+- host token 不返回给模型、不写入日志、不保存到回执。
+- 部分完成或失败不会被报告成“成功”。
 
 ```text
-read current draft
-  -> plan the bounded edit
-  -> require user confirmation
-  -> apply through authorized DraftEditing
-  -> canonical readback
-  -> JSON + Markdown receipt
+读取草稿
+  → 规划最小范围修改
+  → 用户确认
+  → 授权 DraftEditing 应用
+  → 回读核对
+  → JSON + Markdown 回执
 ```
 
-Default controls:
+## 🧰 工具矩阵
 
-- `mode=plan` never writes the draft;
-- `mode=apply` requires `confirm=true`;
-- runtime permission requests are not auto-approved unless explicitly requested;
-- draft JSON files are backed up before writes;
-- export refuses to overwrite an existing file by default;
-- host tokens are never returned, logged, committed, or written to receipts;
-- failures or partial results are not reported as success.
-
-## Tools
-
-| Tool | Purpose |
+| 工具 | 能做什么 |
 |---|---|
-| `jianying_doctor` | One-shot environment and host diagnostics with repair guidance. |
-| `jianying_status` | Installation, registry, process, CLI, and capability status. |
-| `jianying_drafts` | `list`, `inspect`, and `launch`. |
-| `jianying_host` | Host status, sessions, readback, run status, and cancellation. |
-| `jianying_edit` | Generic high-level plan/apply workflow. |
-| `jianying_subtitle` | Add, update, or remove subtitles. |
-| `jianying_audio` | Volume, trim, and fade. |
-| `jianying_transition` | Add, update, or remove transitions. |
-| `jianying_export` | Export the draft with overwrite protection. |
-| `jianying_receipt` | List or read edit receipts. |
-| `jianying_cli` | Official Agent CLI query, plan, validate, and guarded legacy apply. |
+| `jianying_doctor` | 一次检查完整环境，返回逐项状态与修复建议。 |
+| `jianying_status` | 查看剪映版本、CLI、草稿注册表、进程和能力。 |
+| `jianying_drafts` | 列出、检查或启动剪映草稿。 |
+| `jianying_host` | 查看 host、会话、草稿回读、run 状态，取消任务。 |
+| `jianying_edit` | 通用高级编辑：计划或应用。 |
+| `jianying_subtitle` | 添加、更新、删除字幕。 |
+| `jianying_audio` | 音量、裁切、淡入淡出。 |
+| `jianying_transition` | 添加、更新、删除转场。 |
+| `jianying_export` | 导出草稿，默认不覆盖已有文件。 |
+| `jianying_receipt` | 列出或读取编辑回执。 |
+| `jianying_cli` | 官方 Agent CLI 的查询、规划、校验和受保护 apply。 |
 
-## High-level operations
+## 🎬 支持的高级操作
 
-Timeline values use milliseconds. Audio volume uses Jianying's `0..1000` range.
+时间单位统一为**毫秒**。音频音量使用剪映范围 `0..1000`，`100` 表示原始幅度。
+
+| 类型 | 操作 |
+|---|---|
+| 字幕 | `subtitle.add`、`subtitle.update`、`subtitle.remove` |
+| 音频 | `audio.set_volume`、`audio.trim`、`audio.fade` |
+| 转场 | `transition.add`、`transition.update`、`transition.remove` |
+| 导出 | `export` |
+
+<details>
+<summary><b>查看一次组合编辑示例</b></summary>
 
 ```json
 [
   {
     "kind": "subtitle.add",
-    "text": "Welcome",
+    "text": "欢迎观看",
     "start_ms": 0,
     "duration_ms": 2000
   },
@@ -154,20 +220,16 @@ Timeline values use milliseconds. Audio volume uses Jianying's `0..1000` range.
   {
     "kind": "transition.add",
     "segment_id": "video-segment-id",
-    "transition_name": "Dissolve",
+    "transition_name": "叠化",
     "duration_ms": 500
   }
 ]
 ```
 
-Supported kinds:
+</details>
 
-- `subtitle.add`, `subtitle.update`, `subtitle.remove`
-- `audio.set_volume`, `audio.trim`, `audio.fade`
-- `transition.add`, `transition.update`, `transition.remove`
-- `export`
-
-Plan first:
+<details>
+<summary><b>先规划，不写入</b></summary>
 
 ```json
 {
@@ -176,7 +238,7 @@ Plan first:
   "operations": [
     {
       "kind": "subtitle.add",
-      "text": "Hello from DSH",
+      "text": "测试字幕",
       "start_ms": 0,
       "duration_ms": 1500
     }
@@ -184,7 +246,10 @@ Plan first:
 }
 ```
 
-After reviewing the plan, apply it with explicit confirmation:
+</details>
+
+<details>
+<summary><b>用户确认后应用并回读</b></summary>
 
 ```json
 {
@@ -194,7 +259,7 @@ After reviewing the plan, apply it with explicit confirmation:
   "operations": [
     {
       "kind": "subtitle.add",
-      "text": "Hello from DSH",
+      "text": "测试字幕",
       "start_ms": 0,
       "duration_ms": 1500
     }
@@ -202,33 +267,32 @@ After reviewing the plan, apply it with explicit confirmation:
 }
 ```
 
-See the [Chinese guide](README.zh-CN.md) for complete subtitle, audio, transition, export, receipt, and configuration examples.
+</details>
 
-## Receipts
+更完整的字幕、音频、转场、导出和回执示例见 [中文详细文档](README.zh-CN.md)。
 
-By default, backups and receipts are stored under:
+## 📋 编辑回执
+
+默认保存在：
 
 ```text
 F:/Codex/.dsh-jianying-plugin/
-├── backups/
-└── receipts/
+├── backups/       # 写入前草稿 JSON 备份
+└── receipts/      # JSON + Markdown 编辑证据
 ```
 
-Each apply records:
+每次 apply 会记录：
 
-- draft ID, name, and path;
-- before and after revision hashes;
-- backup location;
-- requested operations;
-- host task and run IDs;
-- canonical readback result;
-- warnings, failures, and timestamps.
+- 草稿 ID、名称和路径；
+- 修改前后 revision hash；
+- 备份位置；
+- 请求的操作；
+- host task / run / plan ID；
+- canonical 回读结果；
+- 警告、失败和时间；
+- 实际操作的片段 ID 与时间范围。
 
-Use `jianying_receipt` with `op=list` or `op=read`.
-
-## Configuration
-
-Default bundle config:
+## ⚙️ 配置
 
 ```yaml
 installDirs:
@@ -242,21 +306,32 @@ hostPollIntervalMs: 2000
 hostWorkflowTimeoutMs: 300000
 ```
 
-`allowApply` only controls the legacy `jianying_cli apply-patch` flow. `allowHostApply` controls the high-level host workflow.
+- `allowApply`：只控制旧版 `jianying_cli apply-patch`。
+- `allowHostApply`：控制新版高级编辑和导出。
+- `createBackup`：是否在 apply 前备份草稿 JSON。
+- `hostWorkflowTimeoutMs`：默认等待时间。
 
-## Compatibility
+也可以手动指定 `instanceId` 和 `sessionId`，通常不需要。
 
-Tested with:
+## 💻 兼容性
 
-- Windows 11 x64;
-- DSH Desktop `26.1111.2228.0`;
-- Jianying Pro `11.7.0.14652`;
-- Jianying Pro `11.8.0.14778` discovered during local testing;
-- Node.js 22 and 24 in GitHub Actions.
+已验证：
 
-Jianying's Custom Agent host availability can differ by version, account, and rollout. Run `jianying_doctor` before filing a compatibility issue.
+| 环境 | 版本 |
+|---|---|
+| 系统 | Windows 11 x64 |
+| DSH Desktop | `26.1111.2228.0` |
+| 剪映专业版 | `11.7.0.14652` |
+| 剪映专业版 | `11.8.0.14778` |
+| Node CI | 22 / 24 |
+| CI 平台 | Windows / Linux |
 
-## Development
+剪映 Custom Agent host 是否可用会受到版本、账号和灰度发布影响。提交兼容性问题前，请先运行 `jianying_doctor`。
+
+> [!NOTE]
+> 独立运行 `lyra-cli.exe` 会被剪映以 `unauthorized host process` 拒绝。这是上游安全限制，插件不会绕过它。
+
+## 🧪 开发与测试
 
 ```powershell
 npm.cmd test
@@ -267,20 +342,39 @@ npm.cmd run smoke:host
 npm.cmd run pack:release
 ```
 
-Current automated coverage: 22 tests, including a fake authorized host end-to-end apply pipeline and real read-only Jianying integration tests that skip when the app is absent.
+当前覆盖：
 
-See:
+- **22 项自动化测试**；
+- 模拟授权 host 的端到端 plan → confirm → apply → readback → receipt；
+- 真实剪映只读集成测试；
+- Windows / Linux、Node 22 / 24 公共 CI。
 
-- [Feature test matrix](docs/FEATURE_MATRIX.md)
-- [Testing guide](docs/TESTING.md)
-- [Publishing guide](docs/PUBLISHING.md)
-- [Security policy](SECURITY.md)
-- [Contributing](CONTRIBUTING.md)
+更多文档：
 
-## Community
+- [完整中文使用文档](README.zh-CN.md)
+- [功能测试矩阵](docs/FEATURE_MATRIX.md)
+- [测试指南](docs/TESTING.md)
+- [发布指南](docs/PUBLISHING.md)
+- [推广素材](docs/PROMOTION.zh-CN.md)
+- [安全策略](SECURITY.md)
 
-If this plugin saves you time, star the repository and share the edit workflow that worked for you. Reproducible bugs, Jianying version reports, and new editing scenarios are welcome in [Issues](https://github.com/CN-PA/dsh-jianying-plugin/issues/new/choose).
+## ❤️ 参与项目
 
-## License
+如果这个插件节省了你的时间：
 
-MIT
+- ⭐ 给仓库一个 Star；
+- 🐛 提交剪映版本兼容、安装或编辑问题；
+- 💡 分享真实剪辑场景；
+- 🔧 提交字幕、音频、转场和导出相关改进。
+
+[反馈问题](https://github.com/CN-PA/dsh-jianying-plugin/issues/new/choose) ·
+[参与讨论](https://github.com/CN-PA/dsh-jianying-plugin/discussions) ·
+[查看项目主页](https://cn-pa.github.io/dsh-jianying-plugin/)
+
+<div align="center">
+
+**Built with care for DSH × 剪映专业版**
+
+MIT License · Windows only
+
+</div>
