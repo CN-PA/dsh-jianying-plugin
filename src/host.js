@@ -75,6 +75,14 @@ function cleanText(value) {
   return typeof value === 'string' ? value.trim() : ''
 }
 
+function isAbsoluteFilePath(value) {
+  return (
+    path.isAbsolute(value) ||
+    /^[a-zA-Z]:[\\/]/.test(value) ||
+    /^\\\\[^\\]+\\[^\\]+/.test(value)
+  )
+}
+
 function hostConfig(rawConfig = {}) {
   return {
     ...rawConfig,
@@ -835,7 +843,7 @@ export function normalizeHighLevelOperations(rawOperations) {
     const outputPath = cleanText(
       raw.output_path || raw.path || raw.file_path,
     )
-    if (!outputPath || !path.isAbsolute(outputPath)) {
+    if (!outputPath || !isAbsoluteFilePath(outputPath)) {
       errors.push(`operations[${index}] export 需要绝对 output_path。`)
     }
     return {
