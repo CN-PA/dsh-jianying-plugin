@@ -1,8 +1,16 @@
 {
   "name": "dsh-jianying-plugin",
-  "version": "0.2.0",
-  "description": "DSH plugin for inspecting Jianying Pro drafts and applying authorized subtitle, audio, transition, and export operations.",
+  "version": "0.3.0",
+  "description": "Teach DeepSeek Harness to safely edit Jianying Pro drafts with authorized subtitle, audio, transition, export, readback, and receipt workflows.",
   "author": "dsh-jianying-plugin contributors",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CN-PA/dsh-jianying-plugin.git"
+  },
+  "homepage": "https://cn-pa.github.io/dsh-jianying-plugin/",
+  "bugs": {
+    "url": "https://github.com/CN-PA/dsh-jianying-plugin/issues"
+  },
   "publishConfig": {
     "access": "public"
   },
@@ -19,6 +27,7 @@
     "scripts",
     "skills",
     "assets",
+    "site",
     "locale",
     "docs",
     "cordis.patch.yml",
@@ -34,8 +43,12 @@
     "dsh",
     "dsh-plugin",
     "deepseek-harness",
+    "deepseek",
     "jianying",
+    "jianying-pro",
     "capcut",
+    "draftediting",
+    "ai-video-editing",
     "video-editing"
   ],
   "license": "MIT",

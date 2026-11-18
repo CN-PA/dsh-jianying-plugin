@@ -10,6 +10,7 @@ npm.cmd run validate:manifest
 
 The suite covers:
 
+- one-shot doctor checks against the live local host;
 - fixture discovery, listing, and encrypted-draft inspection;
 - fake official Agent CLI query, validation, and guarded apply;
 - high-level subtitle, audio, transition, and export normalization;
@@ -40,6 +41,32 @@ npm.cmd run smoke:host
 
 Neither smoke command writes a draft.
 
+## One-command installer test
+
+After publishing a release, run the installer against a disposable DSH home:
+
+```powershell
+$env:DSH_HOME='F:\Codex\dsh-jianying-installer-test'
+.\scripts\install.ps1 -Profile installer-test -Version 0.3.0 -DshCommand 'F:\dsh\resources\runtime\cli\bin\dsh.cmd'
+```
+
+Verify that the script:
+
+- resolves the release asset through `api.github.com`;
+- verifies the SHA-256 digest;
+- installs into the requested profile;
+- leaves `--dump-config` and `--dump-config-schema` at exit code `0`.
+
+## Landing page check
+
+Open `site/index.html` locally or after Pages deployment. Verify:
+
+- desktop and mobile layouts;
+- copy-install button;
+- links to GitHub, Releases, Chinese documentation, and Issues;
+- `site/og.png` exists at 1280×640;
+- `assets/social-preview.svg` renders in the README.
+
 ## Live planner smoke test
 
 ```powershell
@@ -59,10 +86,11 @@ No draft content should change. Use this to verify a new Jianying version before
 
 Only use a disposable draft that the user explicitly selected.
 
-1. Call `jianying_edit` with `mode=plan`.
-2. Verify the returned draft ID, operation list, and time ranges.
-3. Call `mode=apply` with `confirm=true`.
-4. Inspect the returned receipt.
+1. Run `jianying_doctor` and resolve every failed check.
+2. Call `jianying_edit` with `mode=plan`.
+3. Verify the returned draft ID, operation list, and time ranges.
+4. Call `mode=apply` with `confirm=true`.
+5. Inspect the returned receipt.
 
 Expected receipt checks:
 

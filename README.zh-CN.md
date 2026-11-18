@@ -1,13 +1,24 @@
 # dsh-jianying-plugin
 
+**让 DeepSeek Harness 通过剪映授权 DraftEditing host 真正编辑剪映草稿。**
+
+[![CI](https://github.com/CN-PA/dsh-jianying-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/CN-PA/dsh-jianying-plugin/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/CN-PA/dsh-jianying-plugin?display_name=tag)](https://github.com/CN-PA/dsh-jianying-plugin/releases/latest)
+[![License: MIT](https://img.shields.io/badge/license-MIT-55e69d.svg)](LICENSE)
+
+[English](README.md) · [项目主页](https://cn-pa.github.io/dsh-jianying-plugin/) · [最新版本](https://github.com/CN-PA/dsh-jianying-plugin/releases/latest)
+
+<img src="https://raw.githubusercontent.com/CN-PA/dsh-jianying-plugin/main/assets/social-preview.svg" alt="dsh-jianying-plugin" width="100%" />
+
 `dsh-jianying-plugin` 是一个可安装到 DeepSeek Harness（DSH）插件模块中的剪映专业版插件。它通过剪映已经授权的 Custom Agent host 操作剪映，不直接修改加密的 `draft_content.json`。
 
-当前版本：`0.2.0`
+当前版本：`0.3.0`
 
 [English README](README.md)
 
 ## 已实现能力
 
+- 一键环境诊断，直接给出缺失项和修复建议。
 - 发现剪映专业版安装目录、版本、草稿注册表和官方 CLI。
 - 按草稿 ID、名称或路径列出和检查草稿。
 - 连接剪映本机授权 host，并自动发现当前 Agent 实例和会话。
@@ -38,14 +49,30 @@ host token 只由本机桥接脚本从剪映进程环境中读取，不会返回
 
 ## 安装
 
+### 一键安装
+
+在 PowerShell 中运行：
+
+```powershell
+irm https://raw.githubusercontent.com/CN-PA/dsh-jianying-plugin/main/scripts/install.ps1 | iex
+```
+
+安装脚本会自动获取最新 Release、校验 SHA-256、下载插件并安装到 `desktop` profile。
+
+自定义 profile 或 DSH 路径：
+
+```powershell
+.\scripts\install.ps1 -Profile github-test -DshCommand 'F:\dsh\resources\runtime\cli\bin\dsh.cmd'
+```
+
 ### 从 GitHub Release 安装
 
-1. 从仓库 Releases 下载 `dsh-jianying-plugin-0.2.0.tgz`。
+1. 从仓库 Releases 下载 `dsh-jianying-plugin-0.3.0.tgz`。
 2. 在 **DSH → 插件** 中选择本地安装。
 3. 也可以使用命令行：
 
 ```powershell
-dsh plugin --profile desktop add file:F:/Downloads/dsh-jianying-plugin-0.2.0.tgz
+dsh plugin --profile desktop add file:F:/Downloads/dsh-jianying-plugin-0.3.0.tgz
 ```
 
 如果插件卡片没有立即出现，请重启 DSH。Web 或 TUI profile 请把 `desktop` 替换为实际 profile 名。
@@ -79,6 +106,7 @@ dsh plugin --profile desktop add 'link:F:/Projects/dsh-jianying-plugin'
 
 | 工具 | 用途 |
 |---|---|
+| `jianying_doctor` | 一键检查 Windows、剪映、CLI、草稿注册表、进程、host 和 Agent 会话，并给出修复建议。 |
 | `jianying_status` | 检查安装目录、版本、草稿注册表、CLI 和运行进程。 |
 | `jianying_drafts` | `list`、`inspect`、`launch`。 |
 | `jianying_cli` | 调用官方 Agent CLI 的 query、plan、validate 和安全 apply 流程。 |
@@ -333,7 +361,7 @@ npm.cmd run smoke:host
 npm.cmd run pack:release
 ```
 
-`smoke:host` 只执行 host 健康检查、会话发现和官方 CLI 草稿回读，不修改草稿。
+`smoke:host` 只执行 host 健康检查、会话发现和官方 CLI 草稿回读，不修改草稿。安装或升级后，建议先在 DSH 中调用 `jianying_doctor`。
 
 固定数据测试可在没有剪映的机器上运行。真实剪映测试只有在发现本机安装时才启用，真实 host 写入测试不会在 CI 中自动执行。
 
@@ -357,10 +385,21 @@ npm.cmd run pack:release
 生成文件：
 
 ```text
-dist/dsh-jianying-plugin-0.2.0.tgz
+dist/dsh-jianying-plugin-0.3.0.tgz
 ```
 
-将 `.tgz` 上传到 GitHub Release。用于 GitHub Actions 的 tag 应当与版本一致，例如 `v0.2.0`。
+将 `.tgz` 上传到 GitHub Release。用于 GitHub Actions 的 tag 应当与版本一致，例如 `v0.3.0`。
+
+## 参与推广
+
+如果这个插件节省了你的时间：
+
+- 给仓库一个 Star；
+- 分享你成功完成的剪映编辑流程；
+- 提交剪映版本兼容报告；
+- 在 Issues 中提出新的字幕、音频、转场和导出场景。
+
+可直接使用的社区文案、演示脚本和发布原则见 [推广素材包](docs/PROMOTION.zh-CN.md)。
 
 ## 许可证
 

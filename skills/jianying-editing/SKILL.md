@@ -7,7 +7,7 @@ description: Inspect Jianying Pro drafts and safely apply authorized subtitle, a
 
 Use this workflow when the user asks DSH to inspect or edit a Jianying Pro draft.
 
-1. Call `jianying_status` and `jianying_host` with `op=status`. Report the installed Jianying version, official CLI status, authorized host status, and active Agent binding.
+1. Call `jianying_doctor` first. Report failed checks and their `nextAction`. Fall back to `jianying_status` and `jianying_host` only when deeper detail is needed.
 2. Call `jianying_drafts` with `op=list` to resolve the exact `draft_id`. Never guess an ID when a display name matches multiple drafts.
 3. Call `jianying_drafts` with `op=inspect` and, when available, `jianying_host` with `op=readback` before proposing a write.
 4. Convert the user's request into high-level operations accepted by `jianying_edit`, `jianying_subtitle`, `jianying_audio`, `jianying_transition`, or `jianying_export`.

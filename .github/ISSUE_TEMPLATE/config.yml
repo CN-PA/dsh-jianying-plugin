@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Chinese setup guide
+    url: https://github.com/CN-PA/dsh-jianying-plugin/blob/main/README.zh-CN.md
+    about: Installation, tool usage, safety model, and troubleshooting.
+  - name: Latest release
+    url: https://github.com/CN-PA/dsh-jianying-plugin/releases/latest
+    about: Download the current DSH plugin tarball.

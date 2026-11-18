@@ -1,0 +1,54 @@
+name: Bug report
+description: Report an installation, diagnostics, planning, readback, or editing problem.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please do not include host tokens, private draft content, or full personal file paths.
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: DSH, dsh-jianying-plugin, Windows, and Jianying Pro versions.
+      placeholder: DSH 26.x / plugin 0.3.0 / Windows 11 / Jianying 11.8.0
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Installation and DSH module
+        - Diagnostic or host discovery
+        - Draft readback
+        - Subtitle edit
+        - Audio edit
+        - Transition edit
+        - Export
+        - Receipt
+        - Documentation
+    validations:
+      required: true
+  - type: textarea
+    id: doctor
+    attributes:
+      label: jianying_doctor result
+      description: Paste the sanitized JSON result from jianying_doctor.
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      render: markdown
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true

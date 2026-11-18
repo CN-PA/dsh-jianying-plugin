@@ -8,6 +8,7 @@ import {
   listDrafts,
   runAgentCli,
 } from '../src/core.js'
+import { diagnoseJianying } from '../src/host.js'
 
 const config = {
   installDirs: ['E:/JianyingPro'],
@@ -106,6 +107,15 @@ localTest('reports complete local capability status', async () => {
   assert.equal(status.capabilities.applyPatch, false)
 })
 
+localTest('runs the one-shot doctor against the local host', async () => {
+  const result = await diagnoseJianying(config)
+  assert.equal(typeof result.ok, 'boolean')
+  assert.ok(Array.isArray(result.checks))
+  assert.ok(result.checks.some((check) => check.id === 'jianying_installation'))
+  assert.ok(result.checks.some((check) => check.id === 'authorized_host'))
+  assert.ok(result.checks.some((check) => check.id === 'agent_session'))
+})
+
 localTest('registers the DSH tool surface and executes status', async () => {
   const plugin = await import('../src/index.js')
   const tools = []
@@ -128,6 +138,7 @@ localTest('registers the DSH tool surface and executes status', async () => {
       'jianying_status',
       'jianying_drafts',
       'jianying_cli',
+      'jianying_doctor',
       'jianying_host',
       'jianying_edit',
       'jianying_subtitle',

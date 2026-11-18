@@ -1,6 +1,6 @@
 {
   "meta": {
     "title": "DSH Jianying Plugin",
-    "description": "Connect to Jianying Pro's authorized editing host, apply subtitle, audio, transition, and export operations, verify the draft, and write an audit receipt."
+    "description": "Edit real Jianying Pro drafts through the authorized host, run one-shot diagnostics, verify readback, and produce auditable edit receipts."
   }
 }

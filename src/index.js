@@ -11,6 +11,7 @@ import {
   applyEditPlan,
   cancelWorkspaceRun,
   createEditPlan,
+  diagnoseJianying,
   getHostHealth,
   getWorkspaceRunStatus,
   listHostSessions,
@@ -332,6 +333,28 @@ export function apply(ctx, rawConfig = {}) {
         }),
       ),
     'dsh-jianying-plugin: cli',
+  )
+
+  ctx.effect(
+    () =>
+      ctx.tools.register(
+        defineTool({
+          name: 'jianying_doctor',
+          description:
+            '一键诊断剪映插件环境：检查 Windows、剪映安装、官方 Agent CLI、草稿注册表、剪映进程、授权 host、Agent 会话，并返回逐项状态与下一步修复建议。开始排障时优先调用。',
+          parameters: {},
+          output: { schema: OUTPUT_SCHEMA, render },
+          timeoutMs: 120_000,
+          execute: async () => {
+            try {
+              return await diagnoseJianying(config)
+            } catch (error) {
+              return errorResult(error, 'jianying_doctor_failed')
+            }
+          },
+        }),
+      ),
+    'dsh-jianying-plugin: doctor',
   )
 
   ctx.effect(

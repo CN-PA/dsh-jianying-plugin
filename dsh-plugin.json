@@ -3,9 +3,9 @@
   "manifestVersion": "0.15",
   "id": "dsh-jianying-plugin",
   "name": "dsh-jianying-plugin",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "license": "MIT",
-  "description": "Inspect Jianying Pro drafts and apply authorized subtitle, audio, transition, and export operations with readback receipts.",
+  "description": "Teach DSH to safely edit Jianying Pro subtitles, audio, transitions, and exports through the authorized DraftEditing host.",
   "facets": {
     "host": {
       "entry": "src/index.js",
@@ -42,7 +42,7 @@
       {
         "icon": "./assets/icon.svg",
         "title": "dsh-jianying-plugin",
-        "description": "Connect DSH to Jianying Pro's authorized editing host, apply high-level timeline operations, verify the result, and write an audit receipt.",
+        "description": "Edit real Jianying Pro drafts, diagnose the authorized host, verify readback, and produce auditable edit receipts.",
         "locales": [
           "locale/en.json",
           "locale/zh.json"

@@ -12,7 +12,7 @@ Verified on 2026-11-18 with:
 |---|---|---|
 | Package manifest validation | Pass | `npm.cmd run validate:manifest` |
 | Source syntax checks | Pass | `npm.cmd run check` |
-| Automated test suite | Pass | 21 tests passing |
+| Automated test suite | Pass | 22 tests passing |
 | Fixture test without Jianying | Pass | Fixture registry, fake Agent CLI, and fake authorized host |
 | Real installation discovery | Pass | Found the latest local Jianying version dynamically |
 | Official CLI discovery | Pass | Found `jianying-agent-cli.exe` and `lyra-cli.exe` |
@@ -22,6 +22,7 @@ Verified on 2026-11-18 with:
 | Official validate-patch | Pass | Fixture patch returned `valid:true` |
 | Authorized host health | Pass | `jianying_host op=status` and `npm.cmd run smoke:host` |
 | Dynamic Agent session discovery | Pass | Found the active instance/session from persisted runtime directories |
+| One-shot doctor | Pass | `jianying_doctor` returned installation, host, session, and repair checks |
 | Official CLI draft readback | Pass | `query-content` returned success without modifying the draft |
 | Host workspace task creation | Pass | Created a DSH planning task through the authorized API |
 | Host planner proposal | Pass | Returned a concrete subtitle plan and candidate proposal |
@@ -37,9 +38,13 @@ Verified on 2026-11-18 with:
 | JSON/Markdown receipt | Pass | Receipt write, read by ID, and read by run ID |
 | Apply safety gate | Pass | Rejects missing confirmation or disabled host writes |
 | Host token exposure | Pass | Token is never returned by the bridge or stored in receipts |
+| One-command installer | Pass | Resolved a GitHub Release asset, verified SHA-256, downloaded, and installed into a fresh DSH profile |
 | DSH profile link install | Pass | Bundle appeared in profile and config dump |
-| DSH clean-profile tgz install | Pass | Installed `0.2.0` into a fresh F-drive `DSH_HOME`; config and schema passes exited 0 |
+| DSH clean-profile tgz install | Pass | Installed `0.3.0` into a fresh F-drive `DSH_HOME`; config and schema passes exited 0 |
 | Plugin display metadata | Pass | Icon, title, description, version, and en/zh locale files |
+| Cross-platform CI | Pass | Windows/Linux with Node 22 and 24 all succeeded |
+| GitHub Release automation | Pass | `v0.2.0` asset uploaded and digest matched the local package |
+| Landing page assets | Pass | Responsive GitHub Pages source and 1280×640 social preview generated |
 
 ## Real draft write
 

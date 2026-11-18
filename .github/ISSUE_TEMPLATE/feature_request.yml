@@ -1,0 +1,39 @@
+name: Feature request
+description: Propose a new Jianying workflow, operation, compatibility improvement, or integration.
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: Describe the editing workflow and why the current tools are insufficient.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed operation or workflow
+      description: Include sample inputs, target segments, and expected readback evidence when possible.
+    validations:
+      required: true
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risk level
+      options:
+        - Read-only or diagnostics
+        - Bounded local edit
+        - Project-wide edit
+        - Export or external write
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety expectations
+      options:
+        - label: The workflow can preserve a pre-write backup.
+          required: true
+        - label: The result can be verified by canonical readback.
+          required: true

@@ -2,6 +2,17 @@
 
 All notable changes to this project are documented here.
 
+## 0.3.0 - 2026-11-18
+
+- Added `jianying_doctor` with actionable pass/fail checks for the full local environment.
+- Added a one-command PowerShell installer with release digest verification.
+- Rebuilt the English README as a product landing page with badges, quick start, compatibility, and safety details.
+- Expanded the Chinese README with one-click installation, diagnostics, and community guidance.
+- Added a GitHub Pages landing page and 1280×640 social preview artwork.
+- Added GitHub issue forms and a pull-request safety checklist.
+- Added repository homepage, bugs, and source metadata.
+- Kept cross-platform CI and release automation on Windows/Linux with Node 22 and 24.
+
 ## 0.2.0 - 2026-11-18
 
 - Connected the plugin to Jianying Pro's authorized Custom Agent host.

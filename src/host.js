@@ -13,6 +13,7 @@ import {
 import path from 'node:path'
 import {
   discoverJianying,
+  getStatus,
   resolveDraft,
   runAgentCli,
 } from './core.js'
@@ -394,6 +395,157 @@ export async function listHostSessions(rawConfig = {}) {
     binding,
     recommendedSessionId: data.recommendedSessionId || null,
     sessions: Array.isArray(data.items) ? data.items : [],
+  }
+}
+
+export async function diagnoseJianying(rawConfig = {}) {
+  const checks = []
+  const nextActions = []
+  const add = (id, ok, message, nextAction = null) => {
+    checks.push({
+      id,
+      ok,
+      status: ok ? 'pass' : 'fail',
+      message,
+      nextAction,
+    })
+    if (!ok && nextAction) nextActions.push(nextAction)
+  }
+
+  add(
+    'platform',
+    process.platform === 'win32',
+    process.platform === 'win32'
+      ? 'Windows host detected.'
+      : `Unsupported platform: ${process.platform}.`,
+    process.platform === 'win32'
+      ? null
+      : 'Run the plugin on Windows 10 or Windows 11.',
+  )
+
+  let status
+  try {
+    status = await getStatus(rawConfig)
+    add(
+      'jianying_installation',
+      status.installation.found && Boolean(status.installation.executable),
+      status.installation.found
+        ? `Jianying ${status.installation.version} found.`
+        : 'Jianying Pro installation was not found.',
+      status.installation.found
+        ? null
+        : 'Set JIANYING_HOME or add the Jianying installation directory in plugin config.',
+    )
+    add(
+      'agent_cli',
+      Boolean(status.installation.agentCli),
+      status.installation.agentCli
+        ? 'Official jianying-agent-cli.exe found.'
+        : 'Official jianying-agent-cli.exe was not found.',
+      status.installation.agentCli
+        ? null
+        : 'Update or repair Jianying Pro so the official Agent CLI is installed.',
+    )
+    add(
+      'draft_registry',
+      status.drafts.registryFound,
+      status.drafts.registryFound
+        ? `Draft registry found with ${status.drafts.total} drafts.`
+        : 'Jianying draft registry was not found.',
+      status.drafts.registryFound
+        ? null
+        : 'Start Jianying Pro once and complete sign-in.',
+    )
+    add(
+      'jianying_process',
+      status.processes.running,
+      status.processes.running
+        ? 'Jianying Pro is running.'
+        : 'Jianying Pro is not running.',
+      status.processes.running
+        ? null
+        : 'Launch Jianying Pro and open the Agent panel once.',
+    )
+  } catch (error) {
+    add(
+      'local_status',
+      false,
+      `Local Jianying status check failed: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+      'Run jianying_status for detailed local diagnostics.',
+    )
+  }
+
+  let health = null
+  let binding = null
+  let sessions = null
+  try {
+    health = await getHostHealth(rawConfig)
+    add(
+      'authorized_host',
+      health.ok,
+      health.ok
+        ? 'Authorized Custom Agent host is reachable.'
+        : 'Authorized Custom Agent host is unavailable.',
+      health.ok
+        ? null
+        : 'Restart Jianying Pro and open the Agent panel.',
+    )
+  } catch (error) {
+    add(
+      'authorized_host',
+      false,
+      `Authorized host check failed: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+      'Restart Jianying Pro; if it still fails, update Jianying Pro.',
+    )
+  }
+
+  if (health?.ok) {
+    try {
+      const discovered = await listHostSessions(rawConfig)
+      binding = discovered.binding
+      sessions = discovered.sessions
+      add(
+        'agent_session',
+        Boolean(binding?.instanceId && binding?.sessionId),
+        `Agent binding discovered (${sessions.length} session(s)).`,
+        null,
+      )
+    } catch (error) {
+      add(
+        'agent_session',
+        false,
+        `Agent session discovery failed: ${
+          error instanceof Error ? error.message : String(error)
+        }`,
+        'Open a Jianying Agent session once, then retry.',
+      )
+    }
+  }
+
+  const failed = checks.filter((check) => !check.ok)
+  return {
+    ok: failed.length === 0,
+    status: failed.length === 0 ? 'ready' : 'needs_attention',
+    checkedAt: new Date().toISOString(),
+    installation: status?.installation || null,
+    process: status?.processes || null,
+    draftSummary: status?.drafts || null,
+    host: health,
+    binding,
+    sessions: Array.isArray(sessions)
+      ? sessions.map((session) => ({
+          sessionId: session.sessionId,
+          title: session.title,
+          executionStatus: session.executionStatus,
+          updatedAt: session.updatedAt,
+        }))
+      : [],
+    checks,
+    nextActions: [...new Set(nextActions)],
   }
 }
 
