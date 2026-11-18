@@ -1,6 +1,6 @@
 work/
 node_modules/
 dist/
-tests/.tmp/
+tests/.tmp*/
 *.log
 .DS_Store

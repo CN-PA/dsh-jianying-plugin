@@ -124,11 +124,22 @@ localTest('registers the DSH tool surface and executes status', async () => {
   plugin.apply(ctx, config)
   assert.deepEqual(
     tools.map((tool) => tool.name),
-    ['jianying_status', 'jianying_drafts', 'jianying_cli'],
+    [
+      'jianying_status',
+      'jianying_drafts',
+      'jianying_cli',
+      'jianying_host',
+      'jianying_edit',
+      'jianying_subtitle',
+      'jianying_audio',
+      'jianying_transition',
+      'jianying_export',
+      'jianying_receipt',
+    ],
   )
   const status = await tools[0].execute({})
   assert.equal(status.ok, true)
-  assert.equal(status.installation.version, '11.7.0.14652')
+  assert.match(status.installation.version, /^\d+\.\d+\.\d+\.\d+$/)
 
   const validated = await tools[2].execute({
     op: 'validate-patch',

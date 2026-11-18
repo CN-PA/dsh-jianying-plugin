@@ -1,11 +1,11 @@
 {
   "$schema": "https://raw.githubusercontent.com/T-Auto/dsh-std/8a15541117cb3c13ddb8f2468308691b6051d162/packages/manifest/schema/dsh-plugin-0.15.schema.json",
   "manifestVersion": "0.15",
-  "id": "dsh-jianying-plugin.local",
+  "id": "dsh-jianying-plugin",
   "name": "dsh-jianying-plugin",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MIT",
-  "description": "Inspect Jianying Pro drafts and prepare validated, host-authorized timeline patches.",
+  "description": "Inspect Jianying Pro drafts and apply authorized subtitle, audio, transition, and export operations with readback receipts.",
   "facets": {
     "host": {
       "entry": "src/index.js",
@@ -42,7 +42,7 @@
       {
         "icon": "./assets/icon.svg",
         "title": "dsh-jianying-plugin",
-        "description": "Inspect local Jianying Pro drafts, plan and validate timeline patches, and use the official host-authorized patch runtime.",
+        "description": "Connect DSH to Jianying Pro's authorized editing host, apply high-level timeline operations, verify the result, and write an audit receipt.",
         "locales": [
           "locale/en.json",
           "locale/zh.json"

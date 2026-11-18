@@ -7,3 +7,7 @@
           - 'F:/JianyingPro'
         tempRoot: 'F:/Codex/.dsh-jianying-plugin'
         allowApply: false
+        allowHostApply: true
+        createBackup: true
+        hostPollIntervalMs: 2000
+        hostWorkflowTimeoutMs: 300000

@@ -28,8 +28,11 @@ assert.ok(display?.title)
 assert.ok(display?.description)
 
 await requireFile('src/index.js')
+await requireFile('src/host.js')
+await requireFile('scripts/jianying-host-client.ps1')
 await requireFile('cordis.patch.yml')
 await requireFile(display.icon)
+await requireFile('README.zh-CN.md')
 
 for (const locale of display.locales ?? []) {
   await requireFile(locale)

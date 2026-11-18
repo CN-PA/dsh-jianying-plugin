@@ -6,12 +6,12 @@ Please report vulnerabilities privately through GitHub Security Advisories after
 
 ## Trust model
 
-- Jianying 11.7 stores draft content in an encrypted format.
+- Jianying 11.x stores draft content in an encrypted format.
 - This plugin does not decrypt or directly rewrite draft files.
-- `apply-patch` is disabled by default.
-- Applying a patch requires all of the following:
-  - plugin configuration `allowApply: true`;
-  - a host-provided `JIANYING_AGENT_RUNTIME_TOKEN`;
-  - an installed `lyra-cli`;
-  - an explicit user confirmation passed as `confirm: true`.
+- High-level host edits require `confirm: true` for every apply.
+- Runtime permission prompts are not approved automatically unless `approve_permissions: true` is explicitly requested.
+- The Custom Agent host token is read from the running Jianying process, held only in memory by the bridge process, and never returned or persisted.
+- Draft JSON files are backed up before writes when `createBackup` is enabled.
+- Export targets are not overwritten unless `overwrite: true`.
 - Temporary CLI request files are created under `F:/Codex/.dsh-jianying-plugin` by default and removed after each call.
+- Receipts and backups also default to the F-drive plugin data directory.
