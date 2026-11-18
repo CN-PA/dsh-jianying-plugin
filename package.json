@@ -1,0 +1,55 @@
+{
+  "name": "dsh-jianying-plugin",
+  "version": "0.1.0",
+  "description": "DSH plugin for inspecting and safely patching Jianying Pro drafts.",
+  "author": "dsh-jianying-plugin contributors",
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./core": "./src/core.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "skills",
+    "assets",
+    "locale",
+    "docs",
+    "cordis.patch.yml",
+    "dsh-plugin.json",
+    "README.md",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "CONTRIBUTING.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "jianying",
+    "capcut",
+    "video-editing"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=22",
+    "dsh": ">=0.1.7-rc.1"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "scripts": {
+    "check": "node --check src/index.js && node --check src/core.js",
+    "validate:manifest": "node scripts/validate-manifest.mjs",
+    "test": "node --test tests/*.test.js",
+    "smoke": "node scripts/smoke.mjs",
+    "pack:release": "node scripts/pack-release.mjs"
+  }
+}

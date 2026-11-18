@@ -1,0 +1,9 @@
+- insert:
+    - id: dsh-jianying-plugin
+      name: 'dsh-jianying-plugin'
+      config:
+        installDirs:
+          - 'E:/JianyingPro'
+          - 'F:/JianyingPro'
+        tempRoot: 'F:/Codex/.dsh-jianying-plugin'
+        allowApply: false
